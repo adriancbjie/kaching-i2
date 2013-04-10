@@ -1,0 +1,132 @@
+<div class="sidetap">
+  <div class="stp-nav">
+    <div>
+      <nav>
+        <a href="#" class="selected">Homepage</a>
+        <a href="#gallery.html">Transaction Records</a>
+        <a href="#monthly.html">Expense Breakdown</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="stp-content" id="content">
+    <header class="stp-fake-header">&nbsp;</header>
+    <div class="stp-overlay nav-toggle">&nbsp;</div>
+
+    <!-- Content Divs Look Like This -->
+    <div class="stp-content-panel">
+      <header>
+        <a href="javascript:void(0)" class="header-button menu"><span>Menu</span></a>
+        <h4>Ka-Ching</h4>
+      </header>
+      <div class="stp-content-frame">
+        <div class="stp-content-body">
+            <!--Content goes here.-->
+			<div class="container" style="padding-top: 50px;">
+			
+				<!-- Record a Purchase Button-->
+				<div class="container">
+					<div class="row-fluid" style="margin: 0px auto 0px auto; text-align: center;">
+					</br>
+						<a class="btn btn-success btn-large span1" href="#scan_receipt.html"><b>Record a Purchase</b></a>
+					</div>
+				</div>
+				</br>
+
+				<!-- Budget Info-->
+				<div class="container">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Budget</th>
+								<th>Amount Spent</th>
+								<th>Amount Remaining</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td onClick="#monthly.html">${{user.monthly_budget}}</td>
+								<td>${{getTotalSpentInAll()}}</td>
+								<td>${{user.monthly_budget - getTotalSpentInAll()}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				</br>
+
+				<!-- Graph-->
+				<div class="container">
+					<div class="well-fluid">
+						<div id="graph" style="width:100%; height:280px;"></div>
+					</div>
+				</div>
+
+			</div>				
+		
+        </div>
+      </div>
+    </div>
+    <!-- End content Div -->
+  </div>
+</div>
+
+<script type="text/javascript">
+	// console.log($("#expenditure").text())
+	console.log();
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'graph',
+            type: 'line',
+            marginRight: 0,
+            marginBottom: 0
+        },
+        title: {
+            text: 'Budget for March 2013',
+            x: 0 //center
+        },
+        subtitle: {
+            text: '',
+            x: -20
+        },
+        xAxis: {
+            // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                // 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            title: {
+                text: '$'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            // formatter: function() {
+            //         return '<b>'+ this.series.name +'</b><br/>'+
+            //         this.x +': '+ this.y +'°C';
+            // }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'right',
+            x: 0,
+            y: 200,
+            borderWidth: 0
+        },
+        series: [{
+            name: 'Cumulative Spent',
+            data: angular.element($("body")).scope().getMonthSpendPlot(2)
+        }, {
+            name: 'Budget',
+            data: angular.element($("body")).scope().getMonthBudgetPlot(2)
+        }]
+    });
+</script>
+
+<script type="text/javascript">
+  var st = sidetap();
+  $(".header-button.menu").on("click",st.toggle_nav)
+</script>

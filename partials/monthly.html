@@ -1,0 +1,155 @@
+<!--NavBar-->
+<div class="sidetap">
+	<div class="stp-content" id="content">
+		<!-- Content Divs Look Like This -->
+		<div class="stp-content-panel">
+			<header>
+				<a href="#" class="header-button"><span>Home</span></a>
+				<a href="javascript:void(0)" class="header-button right" onclick="$('#scroller').mobiscroll('show');"><span>Calender</span></a>
+				<h4>Expense Breakdown</h4>
+			</header>
+			<div class="stp-content-frame">
+				<div class="stp-content-body">
+
+
+					<!--Content goes here.-->
+					<div class="container" style="padding-top: 50px;">
+
+						<div class="container">
+							<table class="table">
+								<tr>
+									<td>Budget</td>
+									<td>${{user.monthly_budget}}</td>
+									<td><a href="#myModal" role="button" id="libButton" class="btn btn-inverse" data-toggle="modal">Edit</a></td>
+								</tr>
+								<tr>
+									<td>Amt Spent</td>
+									<td colspan="2">${{getTotalSpentInMonth()}}</td>
+								</tr>
+								<tr>
+									<td>Amt Remain</td>
+									<td colspan="2">${{user.monthly_budget - getTotalSpentInMonth()}}</td>
+								</tr>
+							</table>
+							<div class="well">
+								<div id="graph" style="width:100%; height:280px;"></div>
+							</div>
+						</div>
+					</div>				
+				</div>
+			</div>
+		</div>
+		<!-- End content Div -->
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Edit Monthly Budget</h3>
+	</div>
+	<div class="modal-body">
+		Enter new value for Monthly Budget:<input type="text" id="monthly_budget" ng-model="user.monthly_budget"/>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true" onclick="draw_chart()">Confirm</button>
+	</div>
+</div>
+
+
+
+<input id="scroller" name="scroller"/>
+<div id="date_output">March 2013</div>
+
+
+<script type="text/javascript">
+	// console.log($("#expenditure").text())
+	function draw_chart() {
+		var month = $("#scroller").mobiscroll('getValue');
+		if (month == null) {
+			month = 2;
+		}
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'graph',
+				type: 'line',
+				marginRight: 0,
+				marginBottom: 0
+			},
+			title: {
+				text: 'Budget for ' + $("#date_output").text(),
+	            x: 0 //center
+	        },
+	        subtitle: {
+	        	text: '',
+	        	x: -20
+	        },
+	        xAxis: {
+	        	lineWidth: 1,
+        		tickWidth: 1,
+	        	type: 'linear',
+	            categories: angular.element($("body")).scope().getDaysOfMonth(),
+	            title: {text: "Day"},
+                    labels: {enabled:true,y : 20, rotation: -45, align: 'right'} 
+	            },
+	            yAxis: {
+	            	title: {
+	            		text: '$'
+	            	},
+	            	plotLines: [{
+	            		value: 0,
+	            		width: 1,
+	            		color: '#808080'
+	            	}]
+	            },
+	            tooltip: {
+	            // formatter: function() {
+	            //         return '<b>'+ this.series.name +'</b><br/>'+
+	            //         this.x +': '+ this.y +'°C';
+	            // }
+	        },
+	        legend: {
+	        	layout: 'vertical',
+	        	align: 'right',
+	        	verticalAlign: 'right',
+	        	x: 0,
+	        	y: 200,
+	        	borderWidth: 0
+	        },
+	        series: [{
+	        	name: 'Cumulative Spent',
+	        	data: angular.element($("body")).scope().getMonthSpendPlot(month)
+	        }, {
+	        	name: 'Budget',
+	        	data: angular.element($("body")).scope().getMonthBudgetPlot(month)
+	        }]
+	    });
+
+	};
+	draw_chart();
+
+</script>
+
+<script type="text/javascript">
+function datetimeOnSelectDelegate(textDate, inst) { 
+ //         if (this.id == "StartDate") {
+           //Do something
+           console.log(textDate);
+           $("#date_output").text(textDate);
+           draw_chart();
+         // }
+     }
+
+     $(function(){
+	    // create a datepicker with default settings
+	    $("#scroller").mobiscroll({preset: 'date', dateFormat: "MM yy", onSelect: datetimeOnSelectDelegate, dateOrder:"MM", minDate:new Date(2013,0), maxDate:new Date(2013,2)}); // Shorthand for: $("#scroller").mobiscroll({ preset: 'date' });
+	    $("#scroller").hide();
+	});
+     </script>
+
+     <script type="text/javascript">
+     var st = sidetap();
+     $(".header-button.menu").on("click",st.toggle_nav)
+     </script>
+

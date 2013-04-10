@@ -1,0 +1,118 @@
+<div class="sidetap">
+  <div class="stp-content" id="content">
+    <!-- Content Divs Look Like This -->
+    <div class="stp-content-panel">
+      <header>
+        <a href="#" class="header-button"><span>Cancel</span></a>
+		<a href="#gallery.html" class="header-button right" ng-click="saveReceipt(chosen_receipt)"><span>Done</span></a>
+        <h4>Purchase Summary</h4>
+      </header>
+      <div class="stp-content-frame">
+        <div class="stp-content-body">
+            <!--Content goes here.-->
+			<div class="container" style="padding-top: 50px;">
+
+				<div class="container-fluid">
+					<div class="container">
+						<div class="row-fluid">
+							<table>
+								<tr>
+									<td>
+										<div class="receiptPhotoArea" style="margin: 0px auto 0px auto; text-align: center;"><img src={{chosen_receipt.image_url}}/></div>
+									</td>
+									<td width="5px"></td>
+									<td>
+											<table class="table table-bordered" height="270" width="180">
+													<tr>
+														<td id="main" colspan="2" style="margin: 0px auto 0px auto; text-align: center;">
+															<!--Main Image-->
+															<img ng-show="chosen_receipt.item_images[0]" src={{chosen_receipt.item_images[0].url}}/>
+														</td>
+													</tr>
+													<tr>
+														<td id="2nd" height="60" width="90" style="margin: 0px auto 0px auto; text-align: center;">
+															<!--Small Image-->
+															<img ng-show="chosen_receipt.item_images[1]" src={{chosen_receipt.item_images[1].url}}/>
+														</td>
+														<td id="3rd" height="60" width="90" style="margin: 0px auto 0px auto; text-align: center;">
+															<!--Small Image-->
+															<img ng-show="chosen_receipt.item_images[2]" src={{chosen_receipt.item_images[2].url}}/>
+														</td>
+													</tr>
+											</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div style="margin: 0px auto 0px auto; text-align: right;">
+						<!-- Button to trigger modal -->
+						<a href="#myModal" role="button" id="libButton" class="btn btn-inverse" data-toggle="modal">Photo Library</a>
+						<!-- Button to return to take photo page -->
+						<a href="#/scan_item.html" id="scanButton" class="btn btn-inverse">Scan</a>
+					</div>
+					</br>
+					<div class="container">
+						<div class="row-fluid">
+							<table class="table table-bordered">
+								<tr>
+									<td width="50"><b>Date</b></td>
+									<td>{{getFormattedDate(chosen_receipt.date)}}</td>
+								</tr>
+								<tr>
+									<td width="50"><b>Location</b></td>
+									<td>{{chosen_receipt.location}}</td>
+								</tr>
+								<tr>
+									<td width="50"><b>Price</b></td>
+									<td>${{chosen_receipt.total}}</td>
+								</tr>
+								<tr>
+									<td colspan="2"><b>Items Purchased</b></td>
+								</tr>
+
+								<tr height="85">
+									<td colspan="2">
+										<ul>
+											<li ng-repeat="item in chosen_receipt.items">
+												{{item.name}} {{item.quantity}}qty x ${{item.price}}
+											</li>
+										</ul>
+									</td>
+								</tr>                        
+							</table>
+						</div>
+					</div>
+				</div>
+			
+			</div>				
+        </div>
+      </div>
+    </div>
+    <!-- End content Div -->
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3 id="myModalLabel">Photo Library</h3>
+</div>
+<div class="modal-body">
+	<ul id="Gallery" type=none>
+		<li ng-repeat="item_photo in photo_lib">
+			<a href="#/purchase_summary.html" ng-click="add_photo(item_photo.url)"><img src={{item_photo.url}} alt="Image 02" />
+			</li>
+		</ul>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+  var st = sidetap();
+  $(".header-button.menu").on("click",st.toggle_nav)
+</script>

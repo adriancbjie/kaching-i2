@@ -1,0 +1,3 @@
+function RouteCtrl($routeParams, $rootScope) {
+
+}
